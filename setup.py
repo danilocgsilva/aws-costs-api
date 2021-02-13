@@ -19,4 +19,3 @@ setup(
     packages=["aws_costs_api"],
     include_package_data=True
 )
-
