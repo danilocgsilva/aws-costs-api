@@ -9,11 +9,11 @@ class AWSCosts:
     def getCosts(self):
         dateUtil = DateUtil()
         now = datetime.datetime.now()
-        month_after = self.__get_month_after(now)
+        month_before = dateUtil.get_month_before(now)
         client = boto3.client("ce")
         dataFromAws = client.get_cost_and_usage(
             TimePeriod={
-                "Start": dateUtil.get_date_string_format_from_datetime(month_after),
+                "Start": dateUtil.get_date_string_format_from_datetime(month_before),
                 "End": dateUtil.get_date_string_format_from_datetime(now)
             },
             Granularity="DAILY",
@@ -26,5 +26,3 @@ class AWSCosts:
             os.environ['AWS_PROFILE'] = profile
         return self
 
-    def __get_month_after(self, customDatetime: datetime) -> datetime:
-        return customDatetime - relativedelta(months=-1)

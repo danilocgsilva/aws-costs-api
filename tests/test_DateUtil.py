@@ -6,8 +6,7 @@ from aws_costs_api.DateUtil import DateUtil
 
 class test_DateUtil(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         self.dateUtil = DateUtil()
 
     def test_format_1(self):
@@ -26,3 +25,31 @@ class test_DateUtil(unittest.TestCase):
             self.dateUtil.get_date_string_format_from_datetime(datetimeForged)
         )
 
+    def test_forget_set_datetime(self):
+        with self.assertRaises(Exception):
+            self.dateUtil.get_date_string_format_from_datetime()
+
+    def test_get_month_before_object(self):
+        datetimeForged = datetime.datetime(2017, 9, 3)
+        dateTimeBeforeMonth = self.dateUtil.get_month_before(datetimeForged)
+        self.assertTrue(
+            isinstance(dateTimeBeforeMonth, datetime.datetime)
+        )
+
+    def test_get_month_before_object_no_set(self):
+        #self.dateUtil.set_datetime(datetime.datetime.now())
+        now = datetime.datetime.now()
+        dateTimeBeforeMonth = self.dateUtil.get_month_before(now)
+        self.assertTrue(
+            isinstance(dateTimeBeforeMonth, datetime.datetime)
+        )
+
+    def test_exception_if_forget_set_in_get_month_before(self):
+        with self.assertRaises(Exception):
+            self.dateUtil.get_month_before()
+
+    def test_get_month_before_1(self):
+        datetimeForged = datetime.datetime(2017, 9, 3)
+        dateTimeBeforeMonth = self.dateUtil.get_month_before(datetimeForged)
+        expected_before_month = 8
+        self.assertEqual(expected_before_month, dateTimeBeforeMonth.month)
