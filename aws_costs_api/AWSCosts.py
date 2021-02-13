@@ -21,8 +21,9 @@ class AWSCosts:
         )
         return dataFromAws
 
-    def setProfile(self, profile: str):
-        os.environ['AWS_PROFILE'] = profile
+    def setProfile(self, profile = None):
+        if profile:
+            os.environ['AWS_PROFILE'] = profile
         return self
 
     def __get_month_after(self, customDatetime: datetime) -> datetime:
