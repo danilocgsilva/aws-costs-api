@@ -11,3 +11,6 @@ class DateUtil:
 
     def get_month_before(self, userDatetime: datetime.datetime):
         return userDatetime - relativedelta(months=+1)
+
+    def get_time_amount_days_before(self, userDatetime: datetime.datetime, day_amount: int):
+        return userDatetime - relativedelta(days=+day_amount)
