@@ -7,7 +7,7 @@ from aws_costs_api.DateUtil import DateUtil
 class AWSCosts:
 
     def __init__(self):
-        self.ec2 = False
+        self.services = []
 
     def getCosts(self):
         dateUtil = DateUtil()
@@ -24,22 +24,34 @@ class AWSCosts:
             "Metrics": ["BlendedCost"]
         }
 
-        if self.ec2:
+        if len(self.services) > 0:
             params["Filter"] = {
                 'Dimensions': {
                     'Key': 'SERVICE',
-                    'Values': [
-                        'ec2'
-                    ]
+                    'Values': self.services
                 }
             }
+
+        print(params)
+        #exit()
 
         dataFromAws = client.get_cost_and_usage(**params)
 
         return dataFromAws
 
-    def setEc2(self):
-        self.ec2 = True
+    def buildFilterParams(self) -> dict:
+    
+        paramsFilter = {
+            'Dimensions': {
+                'Key': 'SERVICE',
+                'Values': self.services
+            }
+        }
+
+        return paramsFilter
+
+    def setService(self, service: str):
+        self.services.append(service)
 
     def setProfile(self, profile = None):
         if profile:
