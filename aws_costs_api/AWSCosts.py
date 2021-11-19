@@ -6,14 +6,17 @@ from dateutil.relativedelta import relativedelta
 from aws_costs_api.DateUtil import DateUtil
 class AWSCosts:
 
-    def __init__(self):
+    def __init__(self, client = None):
         self.services = []
+        if client == None:
+            self.client = boto3.client("ce")
+        else:
+            self.client = client
 
     def getCosts(self):
         dateUtil = DateUtil()
         now = datetime.datetime.now()
         month_before = dateUtil.get_month_before(now)
-        client = boto3.client("ce")
 
         params = {
             "TimePeriod": {
@@ -32,10 +35,7 @@ class AWSCosts:
                 }
             }
 
-        print(params)
-        #exit()
-
-        dataFromAws = client.get_cost_and_usage(**params)
+        dataFromAws = self.client.get_cost_and_usage(**params)
 
         return dataFromAws
 

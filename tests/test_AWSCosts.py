@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(1, "..")
 from aws_costs_api.AWSCosts import AWSCosts
+from tests.mocks.CostExplorerMock import CostExplorerMock
 import unittest
 
 class test_AWSCosts(unittest.TestCase):
@@ -12,3 +13,9 @@ class test_AWSCosts(unittest.TestCase):
         self.assertTrue(
             isinstance(object_returned, AWSCosts)
         )
+
+    def test_default_output_from_class(self):
+        awsCosts = AWSCosts(CostExplorerMock())
+        rawResults = awsCosts.getCosts()
+        print(rawResults)
+
