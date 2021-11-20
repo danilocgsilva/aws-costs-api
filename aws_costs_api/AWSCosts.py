@@ -4,12 +4,13 @@ import os
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from aws_costs_api.DateUtil import DateUtil
+
 class AWSCosts:
 
     def __init__(self, client = None):
         self.services = []
         if client == None:
-            self.client = boto3.client("ce")
+            self.clientAlias = "ce"
         else:
             self.client = client
 
@@ -35,7 +36,11 @@ class AWSCosts:
                 }
             }
 
-        dataFromAws = self.client.get_cost_and_usage(**params)
+        if hasattr(self, 'client'):
+            dataFromAws = self.client.get_cost_and_usage(**params)
+        else:
+            self.client = boto3.client(self.clientAlias)
+            dataFromAws = self.client.get_cost_and_usage(**params)
 
         return dataFromAws
 
