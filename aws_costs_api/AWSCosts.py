@@ -1,8 +1,6 @@
 import boto3
 import datetime
 import os
-from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 from aws_costs_api.DateUtil import DateUtil
 
 class AWSCosts:
