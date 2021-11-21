@@ -11,16 +11,19 @@ class AWSCosts:
             self.clientAlias = "ce"
         else:
             self.client = client
+        self.startTime = None
+        self.dateUtil = DateUtil()
+        self.now = datetime.datetime.now()
+
+    def setStartTime(self, startTime: str):
+        self.startTime = startTime
+        return self
 
     def getCosts(self):
-        dateUtil = DateUtil()
-        now = datetime.datetime.now()
-        month_before = dateUtil.get_month_before(now)
-
         params = {
             "TimePeriod": {
-                "Start": dateUtil.get_date_string_format_from_datetime(month_before),
-                "End": dateUtil.get_date_string_format_from_datetime(now)
+                "Start": self.__prepareStartTime(),
+                "End": self.dateUtil.get_date_string_format_from_datetime(self.now)
             },
             "Granularity": "DAILY",
             "Metrics": ["BlendedCost"]
@@ -61,3 +64,9 @@ class AWSCosts:
             os.environ['AWS_PROFILE'] = profile
         return self
 
+    def __prepareStartTime(self) -> str:
+        if self.startTime == None:
+            month_before = self.dateUtil.get_month_before(self.now)
+            return self.dateUtil.get_date_string_format_from_datetime(month_before)
+        else:
+            return self.startTime
