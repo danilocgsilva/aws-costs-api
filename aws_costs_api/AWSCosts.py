@@ -19,7 +19,7 @@ class AWSCosts:
         self.startTime = startTime
         return self
 
-    def getCosts(self):
+    def getCosts(self) -> dict:
         params = {
             "TimePeriod": {
                 "Start": self.__prepareStartTime(),
@@ -37,11 +37,10 @@ class AWSCosts:
                 }
             }
 
-        if hasattr(self, 'client'):
-            dataFromAws = self.client.get_cost_and_usage(**params)
-        else:
+        if not hasattr(self, 'client'):
             self.client = boto3.client(self.clientAlias)
-            dataFromAws = self.client.get_cost_and_usage(**params)
+
+        dataFromAws = self.client.get_cost_and_usage(**params)
 
         return dataFromAws
 
@@ -65,8 +64,7 @@ class AWSCosts:
         return self
 
     def __prepareStartTime(self) -> str:
-        if self.startTime == None:
-            month_before = self.dateUtil.get_month_before(self.now)
-            return self.dateUtil.get_date_string_format_from_datetime(month_before)
-        else:
-            return self.startTime
+
+        return self.startTime if self.startTime != None else self.dateUtil.get_date_string_format_from_datetime(
+            self.dateUtil.get_month_before(self.now)
+        )
