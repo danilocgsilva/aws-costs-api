@@ -59,6 +59,9 @@ class AWSCosts:
     def setService(self, service: str):
         self.services.append(service)
 
+    def setUniqueService(self, service: str):
+        self.services = [ service ]
+
     def setProfile(self, profile = None):
         if profile:
             os.environ['AWS_PROFILE'] = profile
