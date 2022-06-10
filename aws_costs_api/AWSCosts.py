@@ -2,8 +2,9 @@ import boto3
 import datetime
 import os
 from aws_costs_api.DateUtil import DateUtil
+from aws_costs_api.AWSCostsInterface import AWSCostsInterface
 
-class AWSCosts:
+class AWSCosts(AWSCostsInterface):
 
     def __init__(self, client = None):
         self.services = []
