@@ -58,9 +58,11 @@ class AWSCosts(AWSCostsInterface):
 
     def setService(self, service: str):
         self.services.append(service)
+        return self
 
     def setUniqueService(self, service: str):
         self.services = [ service ]
+        return self
 
     def setProfile(self, profile = None):
         if profile:
