@@ -37,7 +37,6 @@ class test_DateUtil(unittest.TestCase):
         )
 
     def test_get_month_before_object_no_set(self):
-        #self.dateUtil.set_datetime(datetime.datetime.now())
         now = datetime.datetime.now()
         dateTimeBeforeMonth = self.dateUtil.get_month_before(now)
         self.assertTrue(
