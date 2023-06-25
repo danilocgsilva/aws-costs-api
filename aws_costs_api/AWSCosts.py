@@ -2,6 +2,7 @@ import boto3
 import datetime
 import os
 from aws_costs_api.DateUtil import DateUtil
+from aws_costs_api.Repository import Repository
 
 class AWSCosts:
 
@@ -36,11 +37,13 @@ class AWSCosts:
                     'Values': self.services
                 }
             }
-
-        if hasattr(self, 'client'):
-            dataFromAws = self.client.get_cost_and_usage(**params)
-        else:
+            
+        if not hasattr(self, 'client'):
             self.client = boto3.client(self.clientAlias)
+        
+        if existsParametersInDatabase:
+            dataFromAws = repository.getdatafromparams(params)
+        else:
             dataFromAws = self.client.get_cost_and_usage(**params)
 
         return dataFromAws
