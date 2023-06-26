@@ -44,17 +44,18 @@ class AWSCosts:
         if not hasattr(self, 'client'):
             self.client = boto3.client(self.clientAlias)
         
-        if databaseConnectionString == None:
-            databaseConnectionString = tempfile.gettempdir() + "/" + "aws_costs_api.db"
-        self.repository.setConnectionString(databaseConnectionString)
-        serializer = Serializer()
-        serializer.setDictParams(params)
-        data_key = serializer.getClientQueryDataSerialized()
-        if self.repository.dataExists(data_key):
-            dataFromAws = self.repository.getdatafromparams(params)
+        if not databaseConnectionString == None:
+            self.repository.setConnectionString(databaseConnectionString)
+            serializer = Serializer()
+            serializer.setDictParams(params)
+            data_key = serializer.getClientQueryDataSerialized()
+            if self.repository.dataExists(data_key):
+                dataFromAws = self.repository.getdatafromparams(params)
+            else:
+                dataFromAws = self.client.get_cost_and_usage(**params)
         else:
             dataFromAws = self.client.get_cost_and_usage(**params)
-
+            
         return dataFromAws
 
     def buildFilterParams(self) -> dict:
