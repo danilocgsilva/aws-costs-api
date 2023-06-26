@@ -3,6 +3,8 @@ import datetime
 import os
 from aws_costs_api.DateUtil import DateUtil
 from aws_costs_api.Repository import Repository
+from aws_costs_api.Serializer import Serializer
+import tempfile
 
 class AWSCosts:
 
@@ -15,12 +17,13 @@ class AWSCosts:
         self.startTime = None
         self.dateUtil = DateUtil()
         self.now = datetime.datetime.now()
+        self.repository = Repository()
 
     def setStartTime(self, startTime: str):
         self.startTime = startTime
         return self
 
-    def getCosts(self):
+    def getCosts(self, databaseConnectionString = None):
         params = {
             "TimePeriod": {
                 "Start": self.__prepareStartTime(),
@@ -41,8 +44,14 @@ class AWSCosts:
         if not hasattr(self, 'client'):
             self.client = boto3.client(self.clientAlias)
         
-        if existsParametersInDatabase:
-            dataFromAws = repository.getdatafromparams(params)
+        if databaseConnectionString == None:
+            databaseConnectionString = tempfile.gettempdir() + "/" + "aws_costs_api.db"
+        self.repository.setConnectionString(databaseConnectionString)
+        serializer = Serializer()
+        serializer.setDictParams(params)
+        data_key = serializer.getClientQueryDataSerialized()
+        if self.repository.dataExists(data_key):
+            dataFromAws = self.repository.getdatafromparams(params)
         else:
             dataFromAws = self.client.get_cost_and_usage(**params)
 

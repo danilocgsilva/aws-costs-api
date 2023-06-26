@@ -19,7 +19,6 @@ class Repository:
 
     def store(self, key, value):
         if not self.tableExists():
-            print("Table not exists. Creating...")
             self.createTable()
         query = "INSERT INTO {0} (key, value) VALUES (\"{1}\", \"{2}\");"
         valuedQuery = query.format(self.tableName, key, value)
