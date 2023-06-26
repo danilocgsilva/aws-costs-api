@@ -10,6 +10,8 @@ class Repository:
         self.conn = sqlite3.connect(self.connectionString)
         
     def dataExists(self, key) -> bool:
+        if not self.tableExists():
+            self.createTable()
         query = "SELECT value FROM {0} WHERE key = \"{1}\";"
         queryValued = query.format(self.tableName, key)
         cur = self.conn.cursor()

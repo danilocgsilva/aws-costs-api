@@ -14,3 +14,11 @@ class test_DateUtil(unittest.TestCase):
         repository.store(key, value)
         self.assertTrue(repository.dataExists(key))
         os.remove(db_name)
+
+    def test_exists_register(self):
+        db_name = tempfile.gettempdir() + "/" + "test_db.db"
+        repository = Repository()
+        repository.setConnectionString(db_name)
+        key = "key"
+        self.assertFalse(repository.dataExists(key))
+        os.remove(db_name)
