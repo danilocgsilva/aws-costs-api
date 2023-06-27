@@ -5,6 +5,7 @@ from aws_costs_api.DateUtil import DateUtil
 from aws_costs_api.Repository import Repository
 from aws_costs_api.Serializer import Serializer
 import tempfile
+import json
 
 class AWSCosts:
 
@@ -44,17 +45,20 @@ class AWSCosts:
         if not hasattr(self, 'client'):
             self.client = boto3.client(self.clientAlias)
         
-        if not databaseConnectionString == None:
+        if databaseConnectionString == None:
+            dataFromAws = self.client.get_cost_and_usage(**params)
+        else:
             self.repository.setConnectionString(databaseConnectionString)
             serializer = Serializer()
             serializer.setDictParams(params)
-            data_key = serializer.getClientQueryDataSerialized()
-            if self.repository.dataExists(data_key):
-                dataFromAws = self.repository.getdatafromparams(params)
+            data_key_serialized = serializer.getClientQueryDataSerialized()
+            if self.repository.dataExists(data_key_serialized):
+                rawJsonData = self.repository.get(data_key_serialized)
+                dataFromAws = json.loads(rawJsonData)
             else:
                 dataFromAws = self.client.get_cost_and_usage(**params)
-        else:
-            dataFromAws = self.client.get_cost_and_usage(**params)
+                dataFromAwsJson = json.dumps(dataFromAws)
+                self.repository.store(data_key_serialized, dataFromAwsJson)
             
         return dataFromAws
 

@@ -22,10 +22,10 @@ class Repository:
     def store(self, key, value):
         if not self.tableExists():
             self.createTable()
-        query = "INSERT INTO {0} (key, value) VALUES (\"{1}\", \"{2}\");"
-        valuedQuery = query.format(self.tableName, key, value)
+        query = "INSERT INTO {0} (key, value) VALUES (?, ?);"
+        baseQueryWithTable = query.format(self.tableName)
         cur = self.conn.cursor()
-        cur.execute(valuedQuery)
+        cur.execute(baseQueryWithTable, (key, value, ))
         self.conn.commit()
         cur.close()
 
@@ -42,4 +42,11 @@ class Repository:
         cur.execute(queryCreateTable)
         cur.close()
 
-
+    def get(self, key):
+        queryBase = "SELECT value FROM " + self.tableName + " WHERE key = \"{0}\";"
+        valuedQuery = queryBase.format(key)
+        cur = self.conn.cursor()
+        resultsObj = cur.execute(valuedQuery)
+        fetchedResults = resultsObj.fetchall()
+        return fetchedResults[0][0]
+        
