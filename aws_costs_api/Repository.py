@@ -3,7 +3,7 @@ import sqlite3
 class Repository:
     
     def __init__(self):
-        self.tableName = "key_value"
+        self.tableName = "aws_costs"
 
     def setConnectionString(self, connectionString: str):
         self.connectionString = connectionString
