@@ -1,6 +1,7 @@
 import sqlite3
+from aws_costs_api.IRepository import IRepository
 
-class Repository:
+class SQLiteRepository(IRepository):
     
     def __init__(self):
         self.tableName = "aws_costs"

@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-from aws_costs_api.Repository import Repository
+from aws_costs_api.SQLiteRepository import SQLiteRepository
 
 try:
     connectionString = sys.argv[1]
@@ -20,8 +20,8 @@ except IndexError:
     print("Yoy must put a third argument to be value to be stored.")
     exit()
 
-repository = Repository()
+sqliteRepository = SQLiteRepository()
 
 print("Your connection string is: " + connectionString)
-repository.setConnectionString(connectionString)
-repository.store(keyStored, valueStored)
+sqliteRepository.setConnectionString(connectionString)
+sqliteRepository.store(keyStored, valueStored)

@@ -1,13 +1,13 @@
-from aws_costs_api.Repository import Repository
+from aws_costs_api.SQLiteRepository import SQLiteRepository
 import unittest
 import tempfile
 import os
 
-class test_DateUtil(unittest.TestCase):
+class test_SQLiteRepository(unittest.TestCase):
     
     def setUp(self):
         self.db_name = tempfile.gettempdir() + "/" + "test_db.db"
-        self.repository = Repository()
+        self.repository = SQLiteRepository()
         self.repository.setConnectionString(self.db_name)
         
     def tearDown(self):

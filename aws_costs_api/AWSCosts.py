@@ -2,7 +2,7 @@ import boto3
 import datetime
 import os
 from aws_costs_api.DateUtil import DateUtil
-from aws_costs_api.Repository import Repository
+from aws_costs_api.SQLiteRepository import SQLiteRepository
 from aws_costs_api.Serializer import Serializer
 import tempfile
 import json
@@ -18,7 +18,7 @@ class AWSCosts:
         self.startTime = None
         self.dateUtil = DateUtil()
         self.now = datetime.datetime.now()
-        self.repository = Repository()
+        self.repository = SQLiteRepository()
 
     def setStartTime(self, startTime: str):
         self.startTime = startTime
