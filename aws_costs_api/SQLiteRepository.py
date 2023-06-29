@@ -49,5 +49,8 @@ class SQLiteRepository(IRepository):
         cur = self.conn.cursor()
         resultsObj = cur.execute(valuedQuery)
         fetchedResults = resultsObj.fetchall()
-        return fetchedResults[0][0]
+        data = []
+        for entry in fetchedResults:
+            data.append(entry[0])
+        return data[0]
         
