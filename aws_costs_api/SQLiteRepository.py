@@ -67,4 +67,16 @@ class SQLiteRepository(IRepository):
                 "value": entryConverted[1],
             })
         return data
+    
+    def allGenerator(self):
+        query = "SELECT key, value FROM " + self.tableName + ";"
+        cur = self.conn.cursor()
+        resultsObj = cur.execute(query)
+        fetchedResults = resultsObj.fetchall()
+        for entry in fetchedResults:
+            entryConverted = list(entry)
+            yield {
+                "key": entryConverted[0],
+                "value": entryConverted[1]
+            }
         

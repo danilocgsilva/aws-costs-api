@@ -51,3 +51,15 @@ class MongoRepository(IRepository):
             })
             
         return data
+    
+    def allGenerator(self):
+        collection = self.client[self.collectionName][self.collectionName]
+        cursor = collection.find()
+        
+        for entry in cursor:
+            keys = list(entry.keys())
+            values = list(entry.values())
+            yield {
+                "key": keys[0],
+                "value": values[0],
+            }

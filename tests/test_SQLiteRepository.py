@@ -54,3 +54,13 @@ class test_SQLiteRepository(unittest.TestCase):
         entry = allData[0]
         self.assertEqual("thekey", entry["key"])
         self.assertEqual("thecostofawsperiod", entry["value"])
+        
+    def test_all_generator(self):
+        self.repository.store("alfa", "beta")
+        self.repository.store("gamma", "delta")
+        data = []
+        for entry in self.repository.allGenerator():
+            data.append(entry)
+        self.assertEqual(2, len(data))
+        
+    

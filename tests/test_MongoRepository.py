@@ -44,3 +44,12 @@ class test_MongoRepository(unittest.TestCase):
         entry = allData[0]
         self.assertEqual("thekey", entry["key"])
         self.assertEqual("thecostofawsperiod", entry["value"])
+        
+    def test_all_2_elements_generator(self):
+        self.repository.store("thekey", "thecostofawsperiod")
+        self.repository.store("otherKey", "thecostdata")
+        
+        data = []
+        for entry in self.repository.allGenerator():
+            data.append(entry)
+        self.assertEqual(2, len(data))
