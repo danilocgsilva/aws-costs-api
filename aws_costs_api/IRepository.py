@@ -17,3 +17,7 @@ class IRepository(abc.ABC):
     def get(self, key):
         pass
     
+    @abc.abstractmethod
+    def all(self):
+        pass
+

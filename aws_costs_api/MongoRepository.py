@@ -35,3 +35,14 @@ class MongoRepository(IRepository):
             return ""
         
         return data[0]
+    
+    def all(self):
+        collection = self.client[self.collectionName][self.collectionName]
+        cursor = collection.find()
+        
+        data = []
+        for entry in cursor:
+            data.append(entry)
+            
+        return data
+

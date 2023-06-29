@@ -18,4 +18,21 @@ class test_MongoRepository(unittest.TestCase):
         value = "thecostofawsperiod"
         self.repository.store(key, value)
         self.assertEqual(value, self.repository.get(key))
+        
+    def test_all(self):
+        key = "thekey"
+        value = "thecostofawsperiod"
+        self.repository.store(key, value)
+        allData = self.repository.all()
+        self.assertEqual(1, len(allData))
+        self.assertIsInstance(allData, list)
+                
+    def test_all_3_elements(self):
+        self.repository.store("thekey", "thecostofawsperiod")
+        self.repository.store("otherKey", "thecostdata")
+        self.repository.store("eventanother", "moneyamount")
+        
+        allData = self.repository.all()
+        self.assertEqual(3, len(allData))
+        self.assertIsInstance(allData, list)
     

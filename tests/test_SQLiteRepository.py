@@ -29,3 +29,19 @@ class test_SQLiteRepository(unittest.TestCase):
         self.repository.store(key, value)
         fetchedValue = self.repository.get(key)
         self.assertEqual(value, fetchedValue)
+        
+    def test_all(self):
+        key = "alfa"
+        value = "beta"
+        self.repository.store(key, value)
+        fetchedValue = self.repository.all()
+        self.assertEqual(1, len(fetchedValue))
+        self.assertIsInstance(fetchedValue, list)
+        
+    def test_all_3_elements(self):
+        self.repository.store("alfa", "beta")
+        self.repository.store("gamma", "delta")
+        self.repository.store("epsilon", "zeta")
+        fetchedValue = self.repository.all()
+        self.assertEqual(3, len(fetchedValue))
+        self.assertIsInstance(fetchedValue, list)

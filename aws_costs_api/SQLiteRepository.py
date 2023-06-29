@@ -54,3 +54,13 @@ class SQLiteRepository(IRepository):
             data.append(entry[0])
         return data[0]
         
+    def all(self):
+        query = "SELECT key, value FROM " + self.tableName + ";"
+        cur = self.conn.cursor()
+        resultsObj = cur.execute(query)
+        fetchedResults = resultsObj.fetchall()
+        data = []
+        for entry in fetchedResults:
+            data.append(entry)
+        return data
+        
