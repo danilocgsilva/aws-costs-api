@@ -42,7 +42,12 @@ class MongoRepository(IRepository):
         
         data = []
         for entry in cursor:
-            data.append(entry)
+            keys = list(entry.keys())
+            values = list(entry.values())
+            
+            data.append({
+                "key": keys[0],
+                "value": values[0],
+            })
             
         return data
-

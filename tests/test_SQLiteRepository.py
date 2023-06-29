@@ -45,3 +45,12 @@ class test_SQLiteRepository(unittest.TestCase):
         fetchedValue = self.repository.all()
         self.assertEqual(3, len(fetchedValue))
         self.assertIsInstance(fetchedValue, list)
+        
+    def test_all_see_key_and_value(self):
+        key = "thekey"
+        value = "thecostofawsperiod"
+        self.repository.store(key, value)
+        allData = self.repository.all()
+        entry = allData[0]
+        self.assertEqual("thekey", entry["key"])
+        self.assertEqual("thecostofawsperiod", entry["value"])

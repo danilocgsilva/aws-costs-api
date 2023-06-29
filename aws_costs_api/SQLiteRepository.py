@@ -61,6 +61,10 @@ class SQLiteRepository(IRepository):
         fetchedResults = resultsObj.fetchall()
         data = []
         for entry in fetchedResults:
-            data.append(entry)
+            entryConverted = list(entry)
+            data.append({
+                "key": entryConverted[0],
+                "value": entryConverted[1],
+            })
         return data
         
