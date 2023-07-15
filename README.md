@@ -18,3 +18,7 @@ After you have installed your script in your environment, you will import in you
 from aws_costs_api.AWSCosts import AWSCosts
 ```
 Go to [README.md](aws_costs_api/README.md) from api folder for more details.
+
+## Storing results
+
+The application is ready to save data in sqlite database. For this, you must provides the connection string when using `getCosts` from `AWSCosts` class. The connection string is just a file path to the sqlite database file.
