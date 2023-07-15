@@ -8,6 +8,7 @@ import tempfile
 import json
 
 class AWSCosts:
+    """Main class"""
 
     def __init__(self, client = None):
         self.services = []

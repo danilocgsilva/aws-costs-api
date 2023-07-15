@@ -18,6 +18,3 @@ After you have installed your script in your environment, you will import in you
 from aws_costs_api.AWSCosts import AWSCosts
 ```
 Go to [README.md](aws_costs_api/README.md) from api folder for more details.
-
-
-
