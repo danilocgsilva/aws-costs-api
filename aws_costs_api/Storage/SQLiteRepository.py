@@ -1,5 +1,5 @@
 import sqlite3
-from aws_costs_api.IRepository import IRepository
+from aws_costs_api.Storage.IRepository import IRepository
 
 class SQLiteRepository(IRepository):
     

@@ -1,5 +1,5 @@
 import unittest
-from aws_costs_api.Serializer import Serializer
+from aws_costs_api.Storage.Serializer import Serializer
 from tests.mocks.ClientParametersMock import ClientParametersMock
 
 class test_DateUtil(unittest.TestCase):

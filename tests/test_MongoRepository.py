@@ -1,6 +1,6 @@
 import unittest
 from mongomock import MongoClient as MockMongoClient
-from aws_costs_api.MongoRepository import MongoRepository
+from aws_costs_api.Storage.MongoRepository import MongoRepository
 
 class test_MongoRepository(unittest.TestCase):
     

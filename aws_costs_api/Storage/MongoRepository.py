@@ -1,4 +1,4 @@
-from aws_costs_api.IRepository import IRepository
+from aws_costs_api.Storage.IRepository import IRepository
 from pymongo import MongoClient
 import os
 

@@ -1,4 +1,4 @@
-from aws_costs_api.SQLiteRepository import SQLiteRepository
+from aws_costs_api.Storage.SQLiteRepository import SQLiteRepository
 import unittest
 import tempfile
 import os

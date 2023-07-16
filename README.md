@@ -19,6 +19,12 @@ from aws_costs_api.AWSCosts import AWSCosts
 ```
 Go to [README.md](aws_costs_api/README.md) from api folder for more details.
 
+## Adittional packages
+
+For unittests, you need to install `mongomock`.
+
+If some work will be done with MongoDB, must install `pymongo` as well.
+
 ## Storing results
 
 The application is ready to save data in some storage. For this, you must provides the connection string when using `getCosts` from `AWSCosts` class. The available stores until now is SQLite and MySQL.
