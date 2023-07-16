@@ -1,5 +1,6 @@
 from aws_costs_api.Storage.IRepository import IRepository
 import mysql.connector
+from aws_costs_api.Storage.getMysqlCredentialsMemberFromConnectionString import getMysqlCredentialsMemberFromConnectionString
 
 class MySQLRepository(IRepository):
     
@@ -7,13 +8,11 @@ class MySQLRepository(IRepository):
         self.tableName = "aws_cost"
         self.schemaName = "aws"
 
-    
-
     def setConnectionString(self, connectionString: str):
 
         db_host, db_user, db_password, db_name, db_port = getMysqlCredentialsMemberFromConnectionString(connectionString)
 
-        self.conn = mysql.connect(
+        self.conn = mysql.connector.connect(
             host=db_host,
             user=db_user,
             password=db_password,

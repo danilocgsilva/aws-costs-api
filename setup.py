@@ -16,6 +16,6 @@ setup(
     url="https://github.com/danilocgsilva/aws-costs-api",
     author="Danilo Silva",
     author_email="contact@danilocgsilva.me",
-    packages=["aws_costs_api"],
+    packages=["aws_costs_api", "aws_costs_api.Storage"],
     include_package_data=True
 )

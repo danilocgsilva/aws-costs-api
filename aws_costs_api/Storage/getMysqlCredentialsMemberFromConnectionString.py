@@ -23,5 +23,8 @@ def getMysqlCredentialsMemberFromConnectionString(connectionString: str):
             db_database = value
         if key == "PORT":
             db_port = value
+            
+    if db_port == None:
+        db_port = 3306
 
     return db_host, db_user, db_password, db_database, db_port
