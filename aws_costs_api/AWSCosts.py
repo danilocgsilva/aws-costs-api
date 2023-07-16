@@ -2,8 +2,9 @@ import boto3
 import datetime
 import os
 from aws_costs_api.DateUtil import DateUtil
-from aws_costs_api.SQLiteRepository import SQLiteRepository
-from aws_costs_api.Serializer import Serializer
+from aws_costs_api.Storage.SQLiteRepository import SQLiteRepository
+from aws_costs_api.Storage.MySQLRepository import MySQLRepository
+from aws_costs_api.Storage.Serializer import Serializer
 import tempfile
 import json
 
@@ -19,7 +20,6 @@ class AWSCosts:
         self.startTime = None
         self.dateUtil = DateUtil()
         self.now = datetime.datetime.now()
-        self.repository = SQLiteRepository()
 
     def setStartTime(self, startTime: str):
         self.startTime = startTime
@@ -47,21 +47,9 @@ class AWSCosts:
             self.client = boto3.client(self.clientAlias)
         
         if databaseConnectionString == None:
-            dataFromAws = self.client.get_cost_and_usage(**params)
+            return self.client.get_cost_and_usage(**params)
         else:
-            self.repository.setConnectionString(databaseConnectionString)
-            serializer = Serializer()
-            serializer.setDictParams(params)
-            data_key_serialized = serializer.getClientQueryDataSerialized()
-            if self.repository.dataExists(data_key_serialized):
-                rawJsonData = self.repository.get(data_key_serialized)
-                dataFromAws = json.loads(rawJsonData)
-            else:
-                dataFromAws = self.client.get_cost_and_usage(**params)
-                dataFromAwsJson = json.dumps(dataFromAws)
-                self.repository.store(data_key_serialized, dataFromAwsJson)
-            
-        return dataFromAws
+            return self.__getCostsUsingStorage(databaseConnectionString)
 
     def buildFilterParams(self) -> dict:
     
@@ -91,3 +79,21 @@ class AWSCosts:
             return self.dateUtil.get_date_string_format_from_datetime(month_before)
         else:
             return self.startTime
+
+    def __getCostsUsingStorage(self, databaseConnectionString):
+            
+            databaseConnectionStringParts = databaseConnectionString.split(":")
+
+            repository = SQLiteRepository()
+            repository.setConnectionString(databaseConnectionString)
+            serializer = Serializer()
+            serializer.setDictParams(params)
+            data_key_serialized = serializer.getClientQueryDataSerialized()
+            if repository.dataExists(data_key_serialized):
+                rawJsonData = repository.get(data_key_serialized)
+                return json.loads(rawJsonData)
+            else:
+                dataFromAws = client.get_cost_and_usage(**params)
+                dataFromAwsJson = json.dumps(dataFromAws)
+                repository.store(data_key_serialized, dataFromAwsJson)
+                return dataFromAws
