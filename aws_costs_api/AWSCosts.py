@@ -49,7 +49,7 @@ class AWSCosts:
         if databaseConnectionString == None:
             return self.client.get_cost_and_usage(**params)
         else:
-            return self.__getCostsUsingStorage(databaseConnectionString)
+            return self.__getCostsUsingStorage(databaseConnectionString, params)
 
     def buildFilterParams(self) -> dict:
     
@@ -80,12 +80,20 @@ class AWSCosts:
         else:
             return self.startTime
 
-    def __getCostsUsingStorage(self, databaseConnectionString):
+    def __getCostsUsingStorage(self, databaseConnectionString, params):
             
             databaseConnectionStringParts = databaseConnectionString.split(":")
-
-            repository = SQLiteRepository()
-            repository.setConnectionString(databaseConnectionString)
+            databaseStringType = databaseConnectionStringParts[0]
+            if databaseStringType == "mysql":
+                repository = MySQLRepository()
+            elif databaseStringType == "sqlite":
+                repository = SQLiteRepository()
+            else:
+                raise Exception("Database type not known")
+                
+            rawConnectionStrin = databaseConnectionStringParts[1]
+            
+            repository.setConnectionString(rawConnectionStrin)
             serializer = Serializer()
             serializer.setDictParams(params)
             data_key_serialized = serializer.getClientQueryDataSerialized()
@@ -93,7 +101,7 @@ class AWSCosts:
                 rawJsonData = repository.get(data_key_serialized)
                 return json.loads(rawJsonData)
             else:
-                dataFromAws = client.get_cost_and_usage(**params)
+                dataFromAws = self.client.get_cost_and_usage(**params)
                 dataFromAwsJson = json.dumps(dataFromAws)
                 repository.store(data_key_serialized, dataFromAwsJson)
                 return dataFromAws

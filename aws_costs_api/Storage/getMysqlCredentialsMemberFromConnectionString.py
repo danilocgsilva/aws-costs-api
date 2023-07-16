@@ -10,16 +10,16 @@ def getMysqlCredentialsMemberFromConnectionString(connectionString: str):
     for credentialMember in credentialsMembers:
 
         keyValuePair = credentialMember.split("=")
-        key = credentialMember[0]
-        value = credentialMember[1]
+        key = keyValuePair[0]
+        value = keyValuePair[1]
 
         if key == "HOST":
             db_host = value
         if key == "USER":
             db_user = value
         if key == "PASSWORD":
-            db_passworc = value
-        if key == "DATABASE":
+            db_password = value
+        if key == "DATABASE_NAME":
             db_database = value
         if key == "PORT":
             db_port = value
