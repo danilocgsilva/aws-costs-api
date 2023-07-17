@@ -35,9 +35,6 @@ class MySQLRepository(IRepository):
         cur.execute(queryCheck)
         fetchedResults = cur.fetchall()
         return not len(fetchedResults) == 0
-        # if tableResults == None:
-        #     return False
-        # return True
 
     def createTable(self):
         queryCreateTable = "CREATE TABLE `" + self.tableName + "` (`key` TEXT, `value` TEXT)"
@@ -72,9 +69,11 @@ class MySQLRepository(IRepository):
         cur.close()
         
     def get(self, key):
-        valuedQuery = "SELECT value FROM " + self.tableName + " WHERE key = ?;"
+        # valuedQuery = "SELECT value FROM " + self.tableName + " WHERE key = ?;"
+        queryBase = "SELECT value FROM " + self.tableName + " WHERE `key` = \"{0}\";"
+        valuedQuery = queryBase.format(key)
         cur = self.conn.cursor(buffered=True)
-        cur.execute(valuedQuery, (key,))
+        cur.execute(valuedQuery)
         fetchedResults = cur.fetchall()
         data = []
         for entry in fetchedResults:
