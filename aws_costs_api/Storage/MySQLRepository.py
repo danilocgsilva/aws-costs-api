@@ -59,11 +59,10 @@ class MySQLRepository(IRepository):
     def store(self, key, value):
         if not self.tableExists():
             self.createTable()
-        query = "INSERT INTO `{0}` (`key`, `value`) VALUES (\"{1}\", \"{2}\");"
-        value = value.replace("\"", "'")
-        baseQueryWithTable = query.format(self.tableName, key, value)
+        query = "INSERT INTO `{0}` (`key`, `value`) VALUES (%s, %s);"
+        baseQueryWithTable = query.format(self.tableName)
         cur = self.conn.cursor(buffered=True)
-        cur.execute(baseQueryWithTable)
+        cur.execute(baseQueryWithTable, (key, value))
         self.conn.commit()
         cur.close()
         
