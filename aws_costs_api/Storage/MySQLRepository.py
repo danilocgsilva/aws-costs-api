@@ -30,42 +30,52 @@ class MySQLRepository(IRepository):
             AND TABLE_TYPE = 'BASE TABLE'
             AND TABLE_NAME = '{1}'"""
         queryCheck = queryCheckBase.format(self.schemaName, self.tableName)
-        cur = self.conn.cursor()
-        tableResults = cur.execute(queryCheck)
-        fetchedResults = tableResults.fetchall()
+        
+        cur = self.conn.cursor(buffered=True)
+        cur.execute(queryCheck)
+        fetchedResults = cur.fetchall()
         return not len(fetchedResults) == 0
+        # if tableResults == None:
+        #     return False
+        # return True
 
     def createTable(self):
         queryCreateTable = "CREATE TABLE `" + self.tableName + "` (`key` TEXT, `value` TEXT)"
-        cur = self.conn.cursor()
+        cur = self.conn.cursor(buffered=True)
         cur.execute(queryCreateTable)
         cur.close()
 
     def dataExists(self, key) -> bool:
         if not self.tableExists():
             self.createTable()
-        query = "SELECT value FROM {0} WHERE key = \"{1}\";"
+        query = "SELECT value FROM {0} WHERE `key` = \"{1}\";"
         queryValued = query.format(self.tableName, key)
-        cur = self.conn.cursor()
-        tableResults = cur.execute(queryValued)
-        fetchedResults = tableResults.fetchall()
+        cur = self.conn.cursor(buffered=True)
+        print("----" + queryValued)
+        cur.execute(queryValued)
+        fetchedResults = cur.fetchall()
         return not len(fetchedResults) == 0
 
     def store(self, key, value):
         if not self.tableExists():
             self.createTable()
-        query = "INSERT INTO `{0}` (`key`, `value`) VALUES (?, ?);"
-        baseQueryWithTable = query.format(self.tableName)
-        cur = self.conn.cursor()
-        cur.execute(baseQueryWithTable, (key, value, ))
+        query = "INSERT INTO `{0}` (`key`, `value`) VALUES (\"{1}\", \"{2}\");"
+        # print("------" + query)
+        # print("------" + key)
+        # print("------" + value)
+        value = value.replace("\"", "'")
+        baseQueryWithTable = query.format(self.tableName, key, value)
+        print("-----" + baseQueryWithTable)
+        cur = self.conn.cursor(buffered=True)
+        cur.execute(baseQueryWithTable)
         self.conn.commit()
         cur.close()
         
     def get(self, key):
         valuedQuery = "SELECT value FROM " + self.tableName + " WHERE key = ?;"
-        cur = self.conn.cursor()
-        resultsObj = cur.execute(valuedQuery, (key,))
-        fetchedResults = resultsObj.fetchall()
+        cur = self.conn.cursor(buffered=True)
+        cur.execute(valuedQuery, (key,))
+        fetchedResults = cur.fetchall()
         data = []
         for entry in fetchedResults:
             data.append(entry[0])
@@ -73,9 +83,9 @@ class MySQLRepository(IRepository):
         
     def all(self):
         query = "SELECT key, value FROM " + self.tableName + ";"
-        cur = self.conn.cursor()
-        resultsObj = cur.execute(query)
-        fetchedResults = resultsObj.fetchall()
+        cur = self.conn.cursor(buffered=True)
+        cur.execute(query)
+        fetchedResults = cur.fetchall()
         data = []
         for entry in fetchedResults:
             entryConverted = list(entry)
@@ -87,9 +97,9 @@ class MySQLRepository(IRepository):
     
     def allGenerator(self):
         query = "SELECT key, value FROM " + self.tableName + ";"
-        cur = self.conn.cursor()
-        resultsObj = cur.execute(query)
-        fetchedResults = resultsObj.fetchall()
+        cur = self.conn.cursor(buffered=True)
+        cur.execute(query)
+        fetchedResults = cur.fetchall()
         for entry in fetchedResults:
             entryConverted = list(entry)
             yield {
